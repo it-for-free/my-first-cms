@@ -141,13 +141,15 @@ class Article
     * @param string $order Столбец, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
-    public static function getList($numRows=1000000, 
-            $categoryId=null, $order="publicationDate DESC") 
+    public static function getList(
+            $numRows=1000000, 
+            $categoryId=null, 
+            $order="publicationDate DESC") 
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) 
-                AS publicationDate
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *, 
+                UNIX_TIMESTAMP(publicationDate) AS publicationDate
                 FROM articles $categoryClause
                 ORDER BY  $order  LIMIT :numRows";
         
@@ -158,16 +160,15 @@ class Article
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
         
-        if ($categoryId) 
+        if ($categoryId) {
             $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
-        
+        }
         $st->execute(); // выполняем запрос к базе данных
 //                        echo "<pre>";
 //                        print_r($st);
 //                        echo "</pre>";
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $list = array();
-
         while ($row = $st->fetch()) {
             $article = new Article($row);
             $list[] = $article;
