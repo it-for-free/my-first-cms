@@ -47,6 +47,11 @@ class Article
     *
     * @param assoc Значения свойств
     */
+    
+    /**
+    * @var bool отображение статьи
+    */
+    public $active = false;
 
     /*
     public function __construct( $data=array() ) {
@@ -94,6 +99,10 @@ class Article
       
       if (isset($data['content'])) {
           $this->smallContent = mb_strimwidth($data['content'], 0, 50, "...");  
+      }
+      
+      if (isset($data['active'])) {
+          $this->active = $data['active'];  
       }
     }
 
@@ -154,15 +163,24 @@ class Article
     public static function getList(
             $numRows=1000000, 
             $categoryId=null, 
-            $order="publicationDate DESC") 
+            $order="publicationDate DESC",
+            $active = false) 
     {
+
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *, 
+        
+        if(isset($_SESSION['username']) && $_SESSION['username'] == ADMIN_USERNAME) {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS *, 
                 UNIX_TIMESTAMP(publicationDate) AS publicationDate
                 FROM articles $categoryClause
                 ORDER BY  $order  LIMIT :numRows";
-        
+        } else {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS *, 
+                UNIX_TIMESTAMP(publicationDate) AS publicationDate
+                FROM articles $categoryClause WHERE active = 1
+                ORDER BY  $order  LIMIT :numRows";
+        } 
         $st = $conn->prepare($sql);
 //                        echo "<pre>";
 //                        print_r($st);
@@ -173,10 +191,9 @@ class Article
         if ($categoryId) {
             $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
         }
-        $st->execute(); // выполняем запрос к базе данных
-//                        echo "<pre>";
-//                        print_r($st);
-//                        echo "</pre>";
+        $st->execute();
+        
+// выполняем запрос к базе данных
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $list = array();
         while ($row = $st->fetch()) {

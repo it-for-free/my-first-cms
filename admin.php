@@ -1,5 +1,5 @@
 <?php
-
+require("HelpFunctions.php");
 require("config.php");
 session_start();
 $action = isset($_GET['action']) ? $_GET['action'] : "";
@@ -126,7 +126,7 @@ function newArticle() {
  * @return null
  */
 function editArticle() {
-	  
+    
     $results = array();
     $results['pageTitle'] = "Edit Article";
     $results['formAction'] = "editArticle";
@@ -177,7 +177,7 @@ function listArticles() {
     $data = Article::getList();
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
-    
+       
     $data = Category::getList();
     $results['categories'] = array();
     foreach ($data['results'] as $category) { 

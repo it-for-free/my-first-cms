@@ -1,5 +1,19 @@
 /* Стили для body and внешнего контейнера */
-	 
+	
+
+#trace{
+    margin: 20px;
+    border: 2px solid green;
+    padding: 10px;
+    background: black;
+    color: green;
+    font-weight: 1000;
+}
+#trace h4{
+    color: green;
+}
+
+
 body {
   margin: 0;
   color: #333;

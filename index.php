@@ -1,5 +1,5 @@
 <?php
-
+require("HelpFunctions.php");
 //phpinfo(); die();
 
 require("config.php");
@@ -69,7 +69,7 @@ function viewArticle()
     $results = array();
     $articleId = (int)$_GET["articleId"];
     $results['article'] = Article::getById($articleId);
-    
+            
     if (!$results['article']) {
         throw new Exception("Статья с id = $articleId не найдена");
     }
