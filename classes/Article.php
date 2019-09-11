@@ -11,6 +11,12 @@ class Article
     * @var int ID статей из базы данны
     */
     public $id = null;
+    
+    // Свойства
+    /**
+    * @var string smallContent сокращенный контент
+    */
+    public $smallContent = null;
 
     /**
     * @var int Дата первой публикации статьи
@@ -84,6 +90,10 @@ class Article
       
       if (isset($data['content'])) {
           $this->content = $data['content'];  
+      }
+      
+      if (isset($data['content'])) {
+          $this->smallContent = mb_strimwidth($data['content'], 0, 50, "...");  
       }
     }
 
