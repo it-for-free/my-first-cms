@@ -31,7 +31,13 @@ class Article
     * @var string Краткое описание статьи
     */
     public $summary = null;
-
+    
+    /**
+    * Первые несколько символов для вывода на главной
+    * 
+    */
+    public $firstchars = null;
+    
     /**
     * @var string HTML содержание статьи
     */
@@ -81,9 +87,10 @@ class Article
       if (isset($data['summary'])) {
           $this->summary = $data['summary'];         
       }
-      
+            
       if (isset($data['content'])) {
-          $this->content = $data['content'];  
+          $this->content = $data['content'];
+          $this->firstchars = mb_strimwidth($data['content'], 0, 50)."...";
       }
     }
 
