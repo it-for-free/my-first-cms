@@ -33,7 +33,7 @@ class Article
     public $summary = null;
     
     /**
-    * Первые несколько символов для вывода на главной
+    * @var Первые несколько символов для вывода на главной
     * 
     */
     public $firstchars = null;
@@ -47,6 +47,7 @@ class Article
     *
     * @param assoc Значения свойств
     */
+    public $active = null;
 
     /*
     public function __construct( $data=array() ) {
@@ -91,6 +92,10 @@ class Article
       if (isset($data['content'])) {
           $this->content = $data['content'];
           $this->firstchars = mb_strimwidth($data['content'], 0, 50)."...";
+      }
+      
+      if (isset($data['active'])) {
+          $this->active = $data ['active'];
       }
     }
 
@@ -149,13 +154,14 @@ class Article
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
     public static function getList($numRows=1000000, 
-            $categoryId=null, $order="publicationDate DESC") 
+            $categoryId=null, $order="publicationDate DESC", $active = 1) 
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
-        $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
+        $categoryClause = $categoryId ? "AND categoryId = :categoryId" : "";
         $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) 
                 AS publicationDate
-                FROM articles $categoryClause
+                FROM articles 
+                WHERE active = :active $categoryClause
                 ORDER BY  $order  LIMIT :numRows";
         
         $st = $conn->prepare($sql);
@@ -164,6 +170,7 @@ class Article
 //                        echo "</pre>";
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
+        $st->bindValue(":active", $active, PDO::PARAM_INT);
         
         if ($categoryId) 
             $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
