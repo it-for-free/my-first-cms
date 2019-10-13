@@ -1,0 +1,1 @@
+ALTER TABLE `articles` ADD `active` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'флаг отображения статьи' AFTER `content`;
