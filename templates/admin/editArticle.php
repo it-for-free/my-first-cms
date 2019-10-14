@@ -47,7 +47,7 @@
               </li>
               <li>
                   <label for="active">Active</label>
-                  <input type="checkbox" name="active" value="true"
+                  <input type="checkbox" name="active" value="1"
                      <?php 
                         if ($results['article']->active != 0){
                             echo " checked";                            
