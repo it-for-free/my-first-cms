@@ -36,7 +36,7 @@ function archive()
     
     $results['category'] = Category::getById( $categoryId );
     
-    $data = Article::getList( 100000, $results['category'] ? $results['category']->id : null );
+    $data = Article::getList( 100000, $results['category'] ? $results['category']->id : null , 1);
     
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
@@ -86,7 +86,7 @@ function viewArticle()
 function homepage() 
 {
     $results = array();
-    $data = Article::getList(HOMEPAGE_NUM_ARTICLES);
+    $data = Article::getList(HOMEPAGE_NUM_ARTICLES, null, 1);
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
     
@@ -98,9 +98,9 @@ function homepage()
     
     $results['pageTitle'] = "Простая CMS на PHP";
     
-//    echo "<pre>";
-//    print_r($data);
-//    echo "</pre>";
+    echo "<pre>";
+    print_r($data);
+    echo "</pre>";
 //    die();
     
     require(TEMPLATE_PATH . "/homepage.php");

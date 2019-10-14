@@ -150,18 +150,34 @@ class Article
     *
     * @param int $numRows Количество возвращаемых строк (по умолчанию = 1000000)
     * @param int $categoryId Вернуть статьи только из категории с указанным ID
+    * @param int $active Флаг активности статьи 
     * @param string $order Столбец, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
     public static function getList($numRows=1000000, 
-            $categoryId=null, $order="publicationDate DESC", $active = 1) 
+            $categoryId=null, $active = null, $order="publicationDate DESC") 
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
-        $categoryClause = $categoryId ? "AND categoryId = :categoryId" : "";
+        function whereClause($categoryId, $active )
+        {
+            $res = '';
+            if (($categoryId||$active) != null){
+                $res = 'WHERE';
+                if($active != null){
+                    $res = $res . " active = :active";
+                }
+                if($categoryId != null){
+                    $res = $res . ", categoryId = :categoryId";
+                }
+            }
+            
+            return $res;
+        }
+        $whereClause = whereClause($categoryId, $active);
         $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) 
                 AS publicationDate
                 FROM articles 
-                WHERE active = :active $categoryClause
+                $whereClause
                 ORDER BY  $order  LIMIT :numRows";
         
         $st = $conn->prepare($sql);
@@ -170,10 +186,11 @@ class Article
 //                        echo "</pre>";
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
-        $st->bindValue(":active", $active, PDO::PARAM_INT);
         
         if ($categoryId) 
             $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
+        if ($active)
+            $st->bindValue(":active", $active, PDO::PARAM_INT);
         
         $st->execute(); // выполняем запрос к базе данных
 //                        echo "<pre>";
@@ -215,13 +232,14 @@ class Article
 
         // Вставляем статью
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "INSERT INTO articles ( publicationDate, categoryId, title, summary, content ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId, :title, :summary, :content )";
+        $sql = "INSERT INTO articles ( publicationDate, categoryId, title, summary, content, active ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId, :title, :summary, :content, :active )";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
         $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );
         $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
         $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
         $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
+        $st->bindValue( ":active", $this->active, PDO::PARAM_INT );
         $st->execute();
         $this->id = $conn->lastInsertId();
         $conn = null;

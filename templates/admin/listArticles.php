@@ -45,11 +45,11 @@
               </td>
               <td>
                 <?php 
-                  if(($article->active) != 0) {
-                    echo 'активна';
+                  if(($article->active) != 1) {
+                    echo 'не активна';
                   }
                   else{
-                      echo 'не активна';
+                      echo 'активна';
                   }
                 ?>    
               </td>
