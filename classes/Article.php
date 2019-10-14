@@ -154,26 +154,27 @@ class Article
     * @param string $order Столбец, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
+   private static function whereClause($categoryId, $active )
+    {
+        $res = '';
+        if (($categoryId!=null)||($active!= null)){
+            $res = 'WHERE';
+            if($active != null){
+                $res = $res . " active = :active";
+            }
+            if($categoryId != null){
+                $res = $res . ", categoryId = :categoryId";
+            }
+        }
+
+        return $res;
+    }
     public static function getList($numRows=1000000, 
             $categoryId=null, $active = null, $order="publicationDate DESC") 
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
-        function whereClause($categoryId, $active )
-        {
-            $res = '';
-            if (($categoryId||$active) != null){
-                $res = 'WHERE';
-                if($active != null){
-                    $res = $res . " active = :active";
-                }
-                if($categoryId != null){
-                    $res = $res . ", categoryId = :categoryId";
-                }
-            }
-            
-            return $res;
-        }
-        $whereClause = whereClause($categoryId, $active);
+        
+        $whereClause = self::whereClause($categoryId, $active);
         $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) 
                 AS publicationDate
                 FROM articles 
