@@ -98,9 +98,9 @@ function homepage()
     
     $results['pageTitle'] = "Простая CMS на PHP";
     
-    echo "<pre>";
-    print_r($data);
-    echo "</pre>";
+//    echo "<pre>";
+//    print_r($data);
+//    echo "</pre>";
 //    die();
     
     require(TEMPLATE_PATH . "/homepage.php");
