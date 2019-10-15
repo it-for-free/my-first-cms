@@ -27,8 +27,8 @@ print_r($data);echo "<pre>";?> -->
         </li>
         <li>
             <label for="group">Активен</label>
-            <input type="hidden" name="active" value="0">
-            <input type="checkbox" name="active" value="1"
+            <input type="hidden" name="group" value="0">
+            <input type="checkbox" name="group" value="1"
                 <?php
                 if ($results['user']->group != 0){
                     echo " checked";
