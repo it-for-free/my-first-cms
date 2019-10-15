@@ -370,7 +370,7 @@ function newUser() {
         header( "Location: admin.php?action=listUsers" );
     } else {
 
-        // User has not posted the category edit form yet: display the form
+        //
         $results['user'] = new User;
         require( TEMPLATE_PATH . "/admin/editUser.php" );
     }
@@ -384,7 +384,33 @@ function newUser() {
  * @return null
  */
 function editUser() {
-    echo 'Редактируем пользователя';
+    $results = array();
+    $results['pageTitle'] = "Редактирование пользователя";
+    $results['formAction'] = "editUser";
+
+    if ( isset($_POST['saveChanges'])) {
+
+        // Сохраняем изменения
+
+        if ( !$user = User::getById( (int)$_POST['userId'] ) ) {
+            header( "Location: admin.php?action=listUsers&error=userNotFound" );
+            return;
+        }
+
+        $user->storeFormValues( $_POST );
+        $user->update();
+        header( "Location: admin.php?action=listUsers&status=changesSaved" );
+
+    } elseif ( isset( $_POST['cancel'] ) ) {
+
+        //
+        header( "Location: admin.php?action=listUsers" );
+    } else {
+
+        //
+        $results['user'] = User::getById( (int)$_GET['userId'] );
+        require( TEMPLATE_PATH . "/admin/editUser.php" );
+    }
 }
 
 

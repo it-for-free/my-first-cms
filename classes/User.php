@@ -50,6 +50,28 @@ class User
         $this->__construct( $params );
     }
 
+
+    /**
+     * Возвращаем объект пользователя соответствующий заданному ID
+     *
+     * @param int ID пользователя
+     * @return Article|false Объект пользователя или false, если запись не найдена или возникли проблемы
+     */
+    public static function getById($id) {
+        $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+        $sql = "SELECT name, pass, group FROM users WHERE id = :id";
+        $st = $conn->prepare($sql);
+        $st->bindValue(":id", $id, PDO::PARAM_INT);
+        $st->execute();
+
+        $row = $st->fetch();
+        $conn = null;
+
+        if ($row) {
+            return new Article($row);
+        }
+    }
+
     /**
      * Возвращаем все (или диапазон) объектов Users из базы данных
      *
