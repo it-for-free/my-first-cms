@@ -1,5 +1,5 @@
-# Файлы нетбинса:
+# Файлы IDE:
 /nbproject/*
-
+/idea/*
 # Локальные настройи:
 config-local.php
