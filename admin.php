@@ -38,6 +38,18 @@ switch ($action) {
     case 'deleteCategory':
         deleteCategory();
         break;
+    case 'listUsers':
+        listUsers();
+        break;
+    case 'newUser':
+        newUser();
+        break;
+    case 'editUser':
+        editUser();
+        break;
+    case 'deleteUser':
+        deleteUser();
+        break;
     default:
         listArticles();
 }
@@ -303,4 +315,58 @@ function deleteCategory() {
     header( "Location: admin.php?action=listCategories&status=categoryDeleted" );
 }
 
-        
+
+/**
+ * Просмотр списка пользователей
+ *
+ * @return null
+ */
+function listUsers() {
+    $results = array();
+    $data = User::getList();
+    $results['users'] = $data['results'];
+    $results['totalRows'] = $data['totalRows'];
+    $results['pageTitle'] = "Список пользователей";
+
+    if ( isset( $_GET['error'] ) ) {
+        if ( $_GET['error'] == "userNotFound" ) $results['errorMessage'] = "Что то пошло не так: Пользователи не найдены.";
+    }
+
+    if ( isset( $_GET['status'] ) ) {
+        if ( $_GET['status'] == "changesSaved" ) $results['statusMessage'] = "Изменения сохранены";
+        if ( $_GET['status'] == "userDeleted" ) $results['statusMessage'] = "Пользователь удалён.";
+    }
+
+    require( TEMPLATE_PATH . "/admin/listUsers.php" );
+}
+
+
+/**
+ * Создание нового пользователя
+ *
+ * @return null
+ */
+function newUser() {
+    echo 'Создаём пользователя';
+}
+
+
+/**
+ * Редактирование пользователя
+ *
+ * @return null
+ */
+function editUser() {
+    echo 'Редактируем пользователя';
+}
+
+
+/**
+ * Удаление пользователя
+ *
+ * @return null
+ */
+function deleteUser() {
+    echo 'Удаляем пользователя';
+
+}
