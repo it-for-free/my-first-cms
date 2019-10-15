@@ -24,7 +24,7 @@ class User
      * @var int Группа пользователя
      */
 
-    public $group = null;
+    public $group = 1;
     /**
      * Устанавливаем свойства объекта с использованием значений в передаваемом массиве
      *
@@ -91,7 +91,7 @@ class User
         // У объекта User уже есть ID?
         if ( !is_null( $this->id ) ) trigger_error ( "User::insert(): Attempt to insert a User object that already has its ID property set (to $this->id).", E_USER_ERROR );
 
-        // Вставляем категорию
+        // Вставляем пользователя
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
         $sql = "INSERT INTO users ( name, pass, group ) VALUES ( :name, :pass, :group )";
         $st = $conn->prepare ( $sql );

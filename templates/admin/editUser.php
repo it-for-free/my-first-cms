@@ -1,11 +1,14 @@
 <?php include "templates/include/header.php" ?>
 <?php include "templates/admin/include/header.php" ?>
+<!--        массив $results<?php echo "<pre>";
+print_r($results);echo "<pre>"; ?>массив $data:<?php echo "<pre>";
+print_r($data);echo "<pre>";?> -->
 
 <h1><?php echo $results['pageTitle']?></h1>
 
 <form action="admin.php?action=<?php echo $results['formAction']?>" method="post">
-    <!-- Обработка формы будет направлена файлу admin.php ф-ции newCategory либо editCategory в зависимости от formAction, сохранённого в result-е -->
-    <input type="hidden" name="categoryId" value="<?php echo $results['category']->id ?>"/>
+    <!-- Обработка формы будет направлена файлу admin.php ф-ции newUser либо editUser в зависимости от formAction, сохранённого в result-е -->
+    <input type="hidden" name="userId" value="<?php echo $results['user']->id ?>"/>
 
     <?php if ( isset( $results['errorMessage'] ) ) { ?>
         <div class="errorMessage"><?php echo $results['errorMessage'] ?></div>
@@ -14,13 +17,24 @@
     <ul>
 
         <li>
-            <label for="name">Category Name</label>
-            <input type="text" name="name" id="name" placeholder="Name of the category" required autofocus maxlength="255" value="<?php echo htmlspecialchars( $results['category']->name )?>" />
+            <label for="name">Имя пользователя</label>
+            <input type="text" name="name" id="name" placeholder="Имя пользователя" required autofocus maxlength="10" value="<?php echo htmlspecialchars( $results['user']->name )?>" />
         </li>
 
         <li>
-            <label for="description">Description</label>
-            <textarea name="description" id="description" placeholder="Brief description of the category" required maxlength="1000" style="height: 5em;"><?php echo htmlspecialchars( $results['category']->description )?></textarea>
+            <label for="pass">Пароль</label>
+            <input type="text" name="pass" id="pass" placeholder="Введите пароль для данного пользователя" required maxlength="10"><?php echo htmlspecialchars( $results['user']->pass )?></input>
+        </li>
+        <li>
+            <label for="group">Активен</label>
+            <input type="hidden" name="active" value="0">
+            <input type="checkbox" name="active" value="1"
+                <?php
+                if ($results['user']->group != 0){
+                    echo " checked";
+                }
+                ?>>
+            </input>
         </li>
 
     </ul>
@@ -32,8 +46,8 @@
 
 </form>
 
-<?php if ( $results['category']->id ) { ?>
-    <p><a href="admin.php?action=deleteCategory&amp;categoryId=<?php echo $results['category']->id ?>" onclick="return confirm('Delete This Category?')">Delete This Category</a></p>
+<?php if ( $results['user']->id ) { ?>
+    <p><a href="admin.php?action=deleteUser&amp;userId=<?php echo $results['user']->id ?>" onclick="return confirm('Удалить данного пользователя?')">Удалить пользователя</a></p>
 <?php } ?>
 
 <?php include "templates/include/footer.php" ?>

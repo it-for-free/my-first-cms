@@ -347,7 +347,34 @@ function listUsers() {
  * @return null
  */
 function newUser() {
-    echo 'Создаём пользователя';
+
+    $results = array();
+    $results['pageTitle'] = "Новый пользователь";
+    $results['formAction'] = "newUser";
+
+    if ( isset( $_POST['saveChanges'] ) ) {
+            echo "<pre>";
+            print_r($results);
+            print_r($_POST);
+            echo "<pre>";
+//            В $_POST данные о статье сохраняются корректно
+        // Обработка формы создания нового пользователя
+        $user = new User;
+        $user->storeFormValues( $_POST );
+        $user->insert();
+        header( "Location: admin.php?action=listUsers&status=changesSaved" );
+
+    } elseif ( isset( $_POST['cancel'] ) ) {
+
+        // Отказ от результатов редактирования: возвращаемся к списку пользователей
+        header( "Location: admin.php?action=listUsers" );
+    } else {
+
+        // User has not posted the category edit form yet: display the form
+        $results['user'] = new User;
+        require( TEMPLATE_PATH . "/admin/editUser.php" );
+    }
+
 }
 
 
