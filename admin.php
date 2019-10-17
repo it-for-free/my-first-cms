@@ -353,10 +353,10 @@ function newUser() {
     $results['formAction'] = "newUser";
 
     if ( isset( $_POST['saveChanges'] ) ) {
-            echo "<pre>";
-            print_r($results);
-            print_r($_POST);
-            echo "<pre>";
+//            echo "<pre>";
+//            print_r($results);
+//            print_r($_POST);
+//            echo "<pre>";
 //            В $_POST данные о статье сохраняются корректно
         // Обработка формы создания нового пользователя
         $user = new User;
@@ -392,7 +392,7 @@ function editUser() {
 
         // Сохраняем изменения
 
-        if ( !$user = User::getById( (int)$_POST['userId'] ) ) {
+        if ( !$user = User::getById( (int)$_POST['id'] ) ) {
             header( "Location: admin.php?action=listUsers&error=userNotFound" );
             return;
         }
@@ -408,7 +408,7 @@ function editUser() {
     } else {
 
         //
-        $results['user'] = User::getById( (int)$_GET['userId'] );
+        $results['user'] = User::getById( (int)$_GET['id'] );
         require( TEMPLATE_PATH . "/admin/editUser.php" );
     }
 }
@@ -420,6 +420,10 @@ function editUser() {
  * @return null
  */
 function deleteUser() {
-    echo 'Удаляем пользователя';
-
+    if ( !$user = User::getById( (int)$_GET['id'] ) ) {
+        header( "Location: admin.php?action=listUsers&error=userNotFound" );
+        return;
+    }
+    $user->delete();
+        header( "Location: admin.php?action=listUsers&status=userDeleted" );
 }

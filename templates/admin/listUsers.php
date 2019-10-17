@@ -14,14 +14,24 @@
 	  
             <table>
                 <tr>
-                    <th>Пользователь</th>
+                    <th>Пользователь</th><th>Активность</th>
                 </tr>
 
         <?php foreach ( $results['users'] as $user ) { ?>
 
-                <tr onclick="location='admin.php?action=editUser&amp;userId=<?php echo $user->id?>'">
+                <tr onclick="location='admin.php?action=editUser&amp;id=<?php echo $user->id?>'">
                     <td>
                         <?php echo $user->name?>
+                    </td>
+                    <td>
+                        <?php 
+                          if(($user->group) != 1) {
+                            echo 'не активен';
+                          }
+                          else{
+                              echo 'активен';
+                          }
+                        ?>    
                     </td>
                 </tr>
 

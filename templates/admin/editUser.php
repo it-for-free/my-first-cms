@@ -1,15 +1,22 @@
 <?php include "templates/include/header.php" ?>
 <?php include "templates/admin/include/header.php" ?>
-<!--        массив $results<?php echo "<pre>";
-print_r($results);echo "<pre>"; ?>массив $data:<?php echo "<pre>";
-print_r($data);echo "<pre>";?> -->
+
+<!--        массив $results
+    <?php echo "<pre>";
+    print_r($results);
+    echo "<pre>"; ?> -->
+
+ <!-- массив $data:<?php
+    echo "<pre>";
+   print_r($data);
+   echo "<pre>";?> -->
 
 <h1><?php echo $results['pageTitle']?></h1>
 
 <form action="admin.php?action=<?php echo $results['formAction']?>" method="post">
     <!-- Обработка формы будет направлена файлу admin.php ф-ции newUser либо editUser в зависимости от formAction, сохранённого в result-е -->
-    <input type="hidden" name="userId" value="<?php echo $results['user']->id ?>"/>
-
+   <?php if ($results['formAction'] != 'newUser'){?>
+   <input type="hidden" name="id" value="<?php echo $results['user']->id;?>"><?php } ?>
     <?php if ( isset( $results['errorMessage'] ) ) { ?>
         <div class="errorMessage"><?php echo $results['errorMessage'] ?></div>
     <?php } ?>
@@ -23,18 +30,17 @@ print_r($data);echo "<pre>";?> -->
 
         <li>
             <label for="pass">Пароль</label>
-            <input type="text" name="pass" id="pass" placeholder="Введите пароль для данного пользователя" required maxlength="10"><?php echo htmlspecialchars( $results['user']->pass )?></input>
+            <input type="text" name="pass" id="pass" placeholder="Введите пароль для данного пользователя" required maxlength="10" value="<?php echo htmlspecialchars( $results['user']->pass )?>" />
         </li>
         <li>
-            <label for="group">Активен</label>
-            <input type="hidden" name="group" value="0">
-            <input type="checkbox" name="group" value="1"
-                <?php
-                if ($results['user']->group != 0){
-                    echo " checked";
-                }
-                ?>>
-            </input>
+            <label for="group">Active</label>
+                 <input type="hidden" name="group" value="0">
+                 <input type="checkbox" name="group" value="1"
+                    <?php 
+                       if ($results['user']->group != 0){
+                           echo " checked";                            
+                       }
+                    ?> />
         </li>
 
     </ul>
@@ -47,7 +53,7 @@ print_r($data);echo "<pre>";?> -->
 </form>
 
 <?php if ( $results['user']->id ) { ?>
-    <p><a href="admin.php?action=deleteUser&amp;userId=<?php echo $results['user']->id ?>" onclick="return confirm('Удалить данного пользователя?')">Удалить пользователя</a></p>
+    <p><a href="admin.php?action=deleteUser&amp;id=<?php echo $results['user']->id ?>" onclick="return confirm('Удалить данного пользователя?')">Удалить пользователя</a></p>
 <?php } ?>
 
 <?php include "templates/include/footer.php" ?>

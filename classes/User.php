@@ -54,12 +54,12 @@ class User
     /**
      * Возвращаем объект пользователя соответствующий заданному ID
      *
-     * @param int ID пользователя
-     * @return Article|false Объект пользователя или false, если запись не найдена или возникли проблемы
+     * @param $id int ID пользователя
+     * @return User|false Объект пользователя или false, если запись не найдена или возникли проблемы
      */
     public static function getById($id) {
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "SELECT name, pass, group FROM users WHERE id = :id";
+        $sql = "SELECT * FROM users WHERE id = :id";
         $st = $conn->prepare($sql);
         $st->bindValue(":id", $id, PDO::PARAM_INT);
         $st->execute();
@@ -68,7 +68,7 @@ class User
         $conn = null;
 
         if ($row) {
-            return new Article($row);
+            return new User($row);
         }
     }
 
@@ -109,13 +109,13 @@ class User
      */
 
     public function insert() {
-
+     
         // У объекта User уже есть ID?
         if ( !is_null( $this->id ) ) trigger_error ( "User::insert(): Attempt to insert a User object that already has its ID property set (to $this->id).", E_USER_ERROR );
 
         // Вставляем пользователя
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "INSERT INTO users ( name, pass, group ) VALUES ( :name, :pass, :group )";
+        $sql = "INSERT INTO users ( name, pass, group_id ) VALUES ( :name, :pass, :group )";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":name", $this->name, PDO::PARAM_STR );
         $st->bindValue( ":pass", $this->pass, PDO::PARAM_STR );
@@ -135,9 +135,9 @@ class User
         // У объекта User  есть ID?
         if ( is_null( $this->id ) ) trigger_error ( "User::update(): Attempt to update a User object that does not have its ID property set.", E_USER_ERROR );
 
-        // Обновляем категорию
+        // Обновляем пользователя
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "UPDATE user SET name=:name, pass=:pass group=:group WHERE id = :id";
+        $sql = "UPDATE users SET name=:name, pass=:pass, group_id=:group WHERE id = :id";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":name", $this->name, PDO::PARAM_STR );
         $st->bindValue( ":pass", $this->pass, PDO::PARAM_STR );
@@ -157,7 +157,7 @@ class User
         // У объекта User  есть ID?
         if ( is_null( $this->id ) ) trigger_error ( "User::delete(): Attempt to delete a User object that does not have its ID property set.", E_USER_ERROR );
 
-        // Удаляем категорию
+        // Удаляем пользователя
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
         $st = $conn->prepare ( "DELETE FROM users WHERE id = :id LIMIT 1" );
         $st->bindValue( ":id", $this->id, PDO::PARAM_INT );
