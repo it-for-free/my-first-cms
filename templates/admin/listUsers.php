@@ -1,5 +1,9 @@
 <?php include "templates/include/header.php" ?>
 	<?php include "templates/admin/include/header.php" ?>
+<!--        <?php echo "<pre>";
+            print_r($results);
+            print_r($data);
+        echo "<pre>"; ?> Данные о массиве $results и типе формы передаются корректно-->
 	  
             <h1>Список пользователей</h1>
 	  
@@ -25,11 +29,11 @@
                     </td>
                     <td>
                         <?php 
-                          if(($user->group) != 1) {
+                          if(($user->groupId) != 1) {
                             echo 'не активен';
                           }
                           else{
-                              echo 'активен';
+                            echo 'активен';
                           }
                         ?>    
                     </td>

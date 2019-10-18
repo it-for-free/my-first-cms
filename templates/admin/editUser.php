@@ -33,11 +33,11 @@
             <input type="text" name="pass" id="pass" placeholder="Введите пароль для данного пользователя" required maxlength="10" value="<?php echo htmlspecialchars( $results['user']->pass )?>" />
         </li>
         <li>
-            <label for="group">Active</label>
-                 <input type="hidden" name="group" value="0">
-                 <input type="checkbox" name="group" value="1"
+            <label for="groupId">Active</label>
+                 <input type="hidden" name="groupId" value="0">
+                 <input type="checkbox" name="groupId" value="1"
                     <?php 
-                       if ($results['user']->group != 0){
+                       if ($results['user']->groupId != 0){
                            echo " checked";                            
                        }
                     ?> />

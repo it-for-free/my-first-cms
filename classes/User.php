@@ -24,7 +24,7 @@ class User
      * @var int Группа пользователя
      */
 
-    public $group = 1;
+    public $groupId = null;
     /**
      * Устанавливаем свойства объекта с использованием значений в передаваемом массиве
      *
@@ -35,7 +35,7 @@ class User
         if (isset($data['id'])) $this->id = (int) $data['id'];
         if (isset($data['name'])) $this->name = $data['name'];
         if (isset($data['pass'])) $this->pass = $data['pass'];
-        if (isset($data['group'])) $this->group = $data['group'];
+        if (isset($data['groupId'])) $this->groupId = $data['groupId'];
     }
 
     /**
@@ -115,7 +115,7 @@ class User
 
         // Вставляем пользователя
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "INSERT INTO users ( name, pass, group_id ) VALUES ( :name, :pass, :group )";
+        $sql = "INSERT INTO users ( name, pass, groupId ) VALUES ( :name, :pass, :group )";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":name", $this->name, PDO::PARAM_STR );
         $st->bindValue( ":pass", $this->pass, PDO::PARAM_STR );
@@ -137,12 +137,12 @@ class User
 
         // Обновляем пользователя
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "UPDATE users SET name=:name, pass=:pass, group_id=:group WHERE id = :id";
+        $sql = "UPDATE users SET name=:name, pass=:pass, groupId=:group WHERE id = :id";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":name", $this->name, PDO::PARAM_STR );
         $st->bindValue( ":pass", $this->pass, PDO::PARAM_STR );
         $st->bindValue( ":id", $this->id, PDO::PARAM_INT );
-        $st->bindValue( ":group", $this->group, PDO::PARAM_INT );
+        $st->bindValue( ":group", $this->groupId, PDO::PARAM_INT );
         $st->execute();
         $conn = null;
     }
