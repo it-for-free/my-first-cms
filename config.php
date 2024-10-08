@@ -8,9 +8,9 @@ try {
     
     // Настройки БД и остальных параметров будем хранить в массиве
     $CmsConfiguration = array(); 
-    $CmsConfiguration["DB_DSN"] = "mysql:host=localhost;dbname=cms;charset=utf8;" ;
-    $CmsConfiguration["DB_USERNAME"] = "root";
-    $CmsConfiguration["DB_PASSWORD"] = "qwe123";
+    $CmsConfiguration["DB_DSN"] = "mysql:host=localhost;dbname=db_cms;charset=utf8;" ;
+    $CmsConfiguration["DB_USERNAME"] = "myuser";
+    $CmsConfiguration["DB_PASSWORD"] = "12345";
     
     // Объявление констант, используемых в проекте
     $CmsConfiguration["CLASS_PATH"] = "classes";

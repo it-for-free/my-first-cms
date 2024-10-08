@@ -36,7 +36,7 @@ class Article
     * @var string HTML содержание статьи
     */
     public $content = null;
-    
+    public $content50char = null;    
     /**
      * Создаст объект статьи
      * 
@@ -69,6 +69,7 @@ class Article
       
       if (isset($data['content'])) {
           $this->content = $data['content'];  
+          $this->content50char = mb_strimwidth($data['content'], 0, 50) . '...';
       }
     }
 
