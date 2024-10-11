@@ -64,7 +64,7 @@ function login() {
         } else {
 
           // Ошибка входа: выводим сообщение об ошибке для пользователя
-          $results['errorMessage'] = "Неправильный пароль, попробуйте ещё раз.";
+          $results['errorMessage'] = "Неправильный пароль, попробуй ещё раз.";
           require( TEMPLATE_PATH . "/admin/loginForm.php" );
         }
 

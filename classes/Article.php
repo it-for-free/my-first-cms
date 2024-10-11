@@ -36,7 +36,11 @@ class Article
     * @var string HTML содержание статьи
     */
     public $content = null;
+    
     public $content50char = null;    
+    
+    public $activeArticle = null;
+    
     /**
      * Создаст объект статьи
      * 
@@ -70,6 +74,11 @@ class Article
       if (isset($data['content'])) {
           $this->content = $data['content'];  
           $this->content50char = mb_strimwidth($data['content'], 0, 50) . '...';
+      }
+      if (isset($data['active'])){
+          $this->activeArticle = $data['active'];
+      }else{
+          $this->activeArticle = 0;
       }
     }
 
@@ -128,11 +137,19 @@ class Article
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
     public static function getList($numRows=1000000, 
-            $categoryId=null, $order="publicationDate DESC") 
+            $categoryId=null, $activeArticle = false,$order="publicationDate DESC") 
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $fromPart = "FROM articles";
-        $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
+        if (!$activeArticle){
+            $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
+        } else {
+            if ($categoryId){
+                $categoryClause = "WHERE categoryId = :categoryId and active = " . $activeArticle;
+            } else {
+                $categoryClause = "WHERE active = " . $activeArticle;
+            }
+        }
         $sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) 
                 AS publicationDate
                 $fromPart $categoryClause
@@ -183,13 +200,14 @@ class Article
 
         // Вставляем статью
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "INSERT INTO articles ( publicationDate, categoryId, title, summary, content ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId, :title, :summary, :content )";
+        $sql = "INSERT INTO articles ( publicationDate, categoryId, title, summary, content, active ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId, :title, :summary, :content, :active )";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
         $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );
         $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
         $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
         $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
+        $st->bindValue( ":active", $this->activeArticle, PDO::PARAM_INT);
         $st->execute();
         $this->id = $conn->lastInsertId();
         $conn = null;
@@ -209,7 +227,7 @@ class Article
       $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
       $sql = "UPDATE articles SET publicationDate=FROM_UNIXTIME(:publicationDate),"
               . " categoryId=:categoryId, title=:title, summary=:summary,"
-              . " content=:content WHERE id = :id";
+              . " content=:content, active=:active WHERE id = :id";
       
       $st = $conn->prepare ( $sql );
       $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
@@ -218,6 +236,7 @@ class Article
       $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
       $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
       $st->bindValue( ":id", $this->id, PDO::PARAM_INT );
+      $st->bindValue(":active", $this->activeArticle, PDO::PARAM_INT);
       $st->execute();
       $conn = null;
     }
