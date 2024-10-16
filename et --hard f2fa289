@@ -1,0 +1,12 @@
+[33m05a26a1[m[33m ([m[1;36mHEAD -> [m[1;32mPractic2[m[33m)[m HEAD@{0}: reset: moving to HEAD~2
+[33m23f827d[m HEAD@{1}: reset: moving to HEAD~2
+[33m47d5047[m HEAD@{2}: commit: Добавил параметр для статей
+[33m5de0c84[m[33m ([m[1;31morigin/first50[m[33m, [m[1;32mfirst50[m[33m)[m HEAD@{3}: reset: moving to HEAD~2
+[33mf2fa289[m[33m ([m[1;31morigin/Practic2[m[33m)[m HEAD@{4}: commit: Добавил параметр активновсти у статьи
+[33mda8b61b[m HEAD@{5}: commit (amend): Добавил параметр активности для статей
+[33mbeded28[m HEAD@{6}: commit: Добавил параметр активности для статей
+[33m5de0c84[m[33m ([m[1;31morigin/first50[m[33m, [m[1;32mfirst50[m[33m)[m HEAD@{7}: checkout: moving from first50 to Practic2
+[33m5de0c84[m[33m ([m[1;31morigin/first50[m[33m, [m[1;32mfirst50[m[33m)[m HEAD@{8}: commit: Добавлены изменения в файлы и новый файл config-local.php
+[33m23f827d[m HEAD@{9}: commit: Добавил на домашней странице изображение первых 50 символов
+[33m7ad367c[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{10}: checkout: moving from master to first50
+[33m7ad367c[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{11}: clone: from https://github.com/ZXCpikachu/my-first-cms.git

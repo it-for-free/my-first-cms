@@ -38,6 +38,18 @@ switch ($action) {
     case 'deleteCategory':
         deleteCategory();
         break;
+    case 'listUsers':
+        listUsers();
+        break;
+    case 'newUser':
+        newUser();
+        break;
+    case 'editUser':
+        editUser();
+        break;
+    case 'deleteUser':
+        deleteUser();
+        break;
     default:
         listArticles();
 }
@@ -61,6 +73,14 @@ function login() {
           $_SESSION['username'] = ADMIN_USERNAME;
           header( "Location: admin.php");
 
+        }elseif($active = testMatches($_POST)){
+            if($active == 'active'){
+                $_SESSION['username'] = $_POST['username'];
+                header("Location: admin.php");
+            }else {
+                 $results['errorMessage'] = "Ваша учетная запись не активна ";
+                 require(TEMPLATE_PATH . "/admin/loginForm.php");
+            }
         } else {
 
           // Ошибка входа: выводим сообщение об ошибке для пользователя
@@ -302,5 +322,98 @@ function deleteCategory() {
     $category->delete();
     header( "Location: admin.php?action=listCategories&status=categoryDeleted" );
 }
-
+function listUsers(){
+    $results = array();
+    $data = User::getList();
+    $results['users'] = $data['results'];
+    $results['totalRows'] = $data['totalRows'];
+    $results['pageTitle'] = "Users";
+    
+    if (isset($_GET['error'])) {
+        if ($_GET['error'] == "userNotFound") 
+                            $results['errorMessage'] = "Error: User not found.";
+    }
+    if (isset($_GET['status'])) {
+        if ($_GET['status'] == "changesSaved") 
+                    $results['statusMessage'] = "Your changes have been saved.";
+        if ($_GET['status'] == "userDeleted") 
+                                    $results['statusMessage'] = "User deleted.";
+    }
+    require(TEMPLATE_PATH . "/admin/listUsers.php");      
+}
+function newUser(){
+    $results = array();
+    $results['pageTitle'] = "New user";
+    $results['formAction'] = "newUser";
+    
+    if(isset($_POST['saveChanges'])){
+        $user = new User($_POST);
+        if ($user->insert($_POST)){
+            header("Location: admin.php?action=newUser&error=loginExists");
+        }else {
+            header("Location: admin.php?action=listUsers&status=changesSaved");
+        }
+    } elseif(isset($_POST['cancel'])){
+        header("Location: admin.php?action=listUsers");
+    }else {
+         if (isset($_GET['error'])) {
+            if ($_GET['error'] == 'loginExists') {
+                $results['errorMessage'] = 'Логин занят';
+            }
+        }
+        $results['user'] = new User;
+        require(TEMPLATE_PATH . "/admin/editUser.php");
+    }
+}
+function editUser(){
+    $results = array();
+    $results['pageTitle'] = "Edit user";
+    $results['formAction'] = "editUser";
+    
+    if (isset($_POST['saveChanges'])){
+        $user = new User($_POST);
         
+        if ($user->update($_POST)){
+            header("Location: admin.php?action=editUser&error=loginExists&userLogin" . $_POST['userLogin']);
+        }else{
+            header("Location: admin.php?action=listUsers&status=changesSaved");
+        }
+    }elseif (isset ($_POST['cancel'])){
+        header("Location: admin.php?action=listUsers");
+    }else {
+        if (isset($_GET['error'])) {
+            if ($_GET['error'] == 'loginExists') {
+                $results['errorMessage'] = 'Логин занят';
+            }
+        }
+         $results['user'] = User::getByLogin($_GET['userLogin']);
+        require(TEMPLATE_PATH . "/admin/editUser.php");
+    }
+}
+function deleteUser()
+{
+    if (!$user = User::getByLogin($_GET['userLogin'])) {
+        header("Location: admin.php?action=listUsers&error=userNotFound");
+        return;
+    }
+    $user->delete();
+    header("Location: admin.php?action=listUsers&status=userDeleted"); 
+}
+function testMatches($param){
+    $conn = new PDO(DB_DSN,DB_USERNAME,DB_PASSWORD);
+    $sql = "SELECT password, active FROM users WHERE login = :login";
+    $st = $conn->prepare($sql);
+    $st->bindValue(":login", $param['username'],PDO::PARAM_STR);
+    $st->execute();
+    $row = $st->fetch();
+    $conn = null;
+    
+    if ($param['password'] === $row['password']){
+        if($row['active'] == 1){
+            return 'active';
+        }else {
+            return 'noActive';
+        }
+    }
+    return false;
+}
