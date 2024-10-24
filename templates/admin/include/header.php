@@ -6,6 +6,7 @@
          <?php if ($_SESSION['username'] === 'admin') { ?>
                 <a href="admin.php?action=listUsers">Edit User</a> 
         <?php } ?>
+        <a href="admin.php?action=listSubcategories">Edit Subcategories</a>
         <a href="admin.php?action=logout"?>Log Out</a>
         
             

@@ -20,6 +20,9 @@ function initApplication()
         case 'archive':
           archive();
           break;
+        case 'viewArticleSubcategory';
+          viewArticleSubcategory();
+          break;
         case 'viewArticle':
           viewArticle();
           break;
@@ -36,7 +39,7 @@ function archive()
     
     $results['category'] = Category::getById( $categoryId );
     
-    $data = Article::getList( 100000, $categoryId,1);
+    $data = Article::getList( 100000,$categoryId,1);
     
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
@@ -53,7 +56,22 @@ function archive()
     
     require( TEMPLATE_PATH . "/archive.php" );
 }
-
+function viewArticleSubcategory() {
+    $results = [];
+    $subcategoryId = (isset($_GET['subcategoryId']) && $_GET['subcategoryId']) ? (int) $_GET['subcategoryId'] : null;
+    $results['subcategory'] = Subcategory::getById($subcategoryId);
+    $data = Article::getList(100000, null, 1, $subcategoryId);
+    $results['articles'] = $data['results'];
+    $results['totalRows'] = $data['totalRows'];
+    $data = Subcategory::getList();
+    $results['subcategories'] = array();
+    foreach ($data['results'] as $subcategory) {
+        $results['subcategories'][$subcategory->id] = $subcategory;
+    }
+    $results['pageHeading'] = $results['subcategory'] ? $results['subcategory']->name : "Article Archive";
+    $results['pageTitle'] = $results['pageHeading'] . " | Widget News";
+    require(TEMPLATE_PATH . "/viewArticleSubcategory.php");
+}
 /**
  * Загрузка страницы с конкретной статьёй
  * 
@@ -95,7 +113,11 @@ function homepage()
     foreach ( $data['results'] as $category ) { 
         $results['categories'][$category->id] = $category;
     } 
-    
+    $data = Subcategory::getList();
+    $results['subcategories'] = array();
+    foreach ($data['results'] as $subcategory) {
+        $results['subcategories'][$subcategory->id] = $subcategory;
+    }
     $results['pageTitle'] = "Простая CMS на PHP";
     
 //    echo "<pre>";

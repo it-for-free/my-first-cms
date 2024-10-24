@@ -26,6 +26,8 @@ class Article
     * @var int ID категории статьи
     */
     public $categoryId = null;
+    
+    public $subcategoryId = null;
 
     /**
     * @var string Краткое описание статьи
@@ -65,6 +67,10 @@ class Article
       
       if (isset($data['categoryId'])) {
           $this->categoryId = (int) $data['categoryId'];      
+      }
+      
+      if(isset($data['subcategoryId'])){
+          $this->subcategoryId = (int) $data['subcategoryId'];
       }
       
       if (isset($data['summary'])) {
@@ -137,16 +143,24 @@ class Article
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
     public static function getList($numRows=1000000, 
-            $categoryId=null, $activeArticle = false,$order="publicationDate DESC") 
+            $categoryId=null, $activeArticle = false,$subcategoryId=null,$order="publicationDate DESC") 
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $fromPart = "FROM articles";
         if (!$activeArticle){
-            $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
+            if ($categoryId){
+                $categoryClause = "WHERE categoryId = :categoryId";
+            } elseif($subcategoryId){
+                $categoryClause = "WHERE subcategoryId = $subcategoryId";
+            } else {
+                $categoryClause = "";
+            }
         } else {
             if ($categoryId){
                 $categoryClause = "WHERE categoryId = :categoryId and active = " . $activeArticle;
-            } else {
+            } elseif($subcategoryId) {
+                $categoryClause = "WHERE subcategoryId = $subcategoryId AND active = $activeArticle";
+            }else {
                 $categoryClause = "WHERE active = " . $activeArticle;
             }
         }
@@ -200,10 +214,11 @@ class Article
 
         // Вставляем статью
         $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-        $sql = "INSERT INTO articles ( publicationDate, categoryId, title, summary, content, active ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId, :title, :summary, :content, :active )";
+        $sql = "INSERT INTO articles ( publicationDate, categoryId,subcategoryId ,title, summary, content, active ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId,:subcategoryId ,:title, :summary, :content, :active )";
         $st = $conn->prepare ( $sql );
         $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
         $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );
+        $st->bindValue( ":subcategoryId", $this->subcategoryId, PDO::PARAM_INT );
         $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
         $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
         $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
@@ -226,12 +241,13 @@ class Article
       // Обновляем статью
       $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
       $sql = "UPDATE articles SET publicationDate=FROM_UNIXTIME(:publicationDate),"
-              . " categoryId=:categoryId, title=:title, summary=:summary,"
+              . " categoryId=:categoryId, subcategoryId =:subcategoryId,title=:title, summary=:summary,"
               . " content=:content, active=:active WHERE id = :id";
       
       $st = $conn->prepare ( $sql );
       $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
       $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );
+      $st->bindValue( ":subcategoryId", $this->subcategoryId, PDO::PARAM_INT );
       $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
       $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
       $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
