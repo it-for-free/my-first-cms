@@ -8,9 +8,9 @@ try {
     
     // Настройки БД и остальных параметров будем хранить в массиве
     $CmsConfiguration = array(); 
-    $CmsConfiguration["DB_DSN"] = "mysql:host=localhost;dbname=cms;charset=utf8;" ;
-    $CmsConfiguration["DB_USERNAME"] = "root";
-    $CmsConfiguration["DB_PASSWORD"] = "qwe123";
+    $CmsConfiguration["DB_DSN"] = "mysql:host=localhost;dbname=db_cms;charset=utf8;" ;
+    $CmsConfiguration["DB_USERNAME"] = "myuser";
+    $CmsConfiguration["DB_PASSWORD"] = "12345";
     
     // Объявление констант, используемых в проекте
     $CmsConfiguration["CLASS_PATH"] = "classes";
@@ -30,8 +30,9 @@ try {
     
     // Подключаем Классы моделей (классы, отвечающие за работу с сущностями базы данных)
     require(CLASS_PATH . "/Article.php");
-    require(CLASS_PATH . "/Category.php");     
-
+    require(CLASS_PATH . "/Category.php");  
+    require(CLASS_PATH . "/User.php");
+    require(CLASS_PATH . "/Subcategory.php");
 } catch (Exception $ex) {
     echo "При загрузке конфигураций возникла проблема!<br><br>";
     error_log($ex->getMessage());
