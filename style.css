@@ -351,4 +351,8 @@ ul.ajax-load li {
     padding: 3px; /* Поля вокруг текста */
     font-size: 12px;
 }
-        
+checkboxActivity {
+            width: 25px;             
+	height: 25px;
+        cursor: pointer;
+        }        
