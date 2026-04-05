@@ -17,17 +17,17 @@
         <?php
 
         // вместо 1234 укажите свой пароль к базе данных
-        $CmsConfiguration["CmsConfig::$db_password"] = "1234"; // переопределяем пароль к базе данных
+        CmsConfig::$db_password = "1234"; // переопределяем пароль к базе данных
        ```
 
-В записимости от настроек, может потребовать переопределить также имя пользователя и имя базы данных:
+В зависимости от настроек, может потребовать переопределить также имя пользователя и имя базы данных:
 ```php
 <?php
-$CmsConfiguration["CmsConfig::$CmsConfig::$db_dsn"] = "mysql:host=localhost;dbname=mfc_base;charset=utf8;" ;
-$CmsConfiguration["CmsConfig::$db_username"] = "myuser";
-$CmsConfiguration["CmsConfig::$db_password"] = "12345";
+CmsConfig::$db_dsn = "mysql:host=localhost;dbname=mfc_base;charset=utf8;" ;
+CmsConfig::$db_username = "myuser";
+CmsConfig::$db_password = "12345";
 ```
-   5) Следуем инструкциям http://fkn.ktu10.com/?q=node/9428
+5) Следуем инструкциям http://fkn.ktu10.com/?q=node/9428
     
 
 Удачной разработки!
