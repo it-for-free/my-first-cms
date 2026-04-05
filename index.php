@@ -85,7 +85,6 @@ function viewArticle()
  */
 function homepage() 
 {
-    echo CmsConfig::$db_password;
     $results = array(); // $const->homepage_num_articles
     $data = Article::getList(CmsConfig::$homepage_num_articles);
     $results['articles'] = $data['results'];
