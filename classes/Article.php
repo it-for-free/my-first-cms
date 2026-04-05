@@ -106,10 +106,10 @@ class Article
         $sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) "
                 . "AS publicationDate FROM articles WHERE id = :id";
         $st = $conn->prepare($sql);
-        $st->bindValue(":id", $id, PDO::PARAM_INT);
+            $st->bindValue(":id", $id, PDO::PARAM_INT);
         $st->execute();
 
-        $row = $st->fetch();
+            $row = $st->fetch();
         $conn = null;
         
         if ($row) { 

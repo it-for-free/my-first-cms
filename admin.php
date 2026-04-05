@@ -112,7 +112,7 @@ function newArticle() {
     } else {
 
         // Пользователь еще не получил форму редактирования: выводим форму
-        $results['article'] = new Article;
+        $results['article'] = null;
         $data = Category::getList();
         $results['categories'] = $data['results'];
         require( CmsConfig::$template_path . "/admin/editArticle.php" );
