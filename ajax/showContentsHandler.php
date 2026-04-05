@@ -10,7 +10,7 @@ if (isset ($_POST['articleId'])) {
     $article = Article::getById((int)$_POST['articleId']);
     echo json_encode($article);
 //        die("Привет)");
-//    $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+//    $conn = new PDO( CmsConfig::$CmsConfig::$db_dsn, CmsConfig::$db_username, CmsConfig::$db_password );
 //    
 //        if (isset($conn)) {
 //            die("Соединенте установлено");

@@ -8,7 +8,7 @@ try {
     initApplication();
 } catch (Exception $e) { 
     $results['errorMessage'] = $e->getMessage();
-    require(TEMPLATE_PATH . "/viewErrorPage.php");
+    require(CmsConfig::$template_path . "/viewErrorPage.php");
 }
 
 
@@ -51,7 +51,7 @@ function archive()
     $results['pageHeading'] = $results['category'] ?  $results['category']->name : "Article Archive";
     $results['pageTitle'] = $results['pageHeading'] . " | Widget News";
     
-    require( TEMPLATE_PATH . "/archive.php" );
+    require( CmsConfig::$template_path . "/archive.php" );
 }
 
 /**
@@ -77,7 +77,7 @@ function viewArticle()
     $results['category'] = Category::getById($results['article']->categoryId);
     $results['pageTitle'] = $results['article']->title . " | Простая CMS";
     
-    require(TEMPLATE_PATH . "/viewArticle.php");
+    require(CmsConfig::$template_path . "/viewArticle.php");
 }
 
 /**
@@ -85,24 +85,20 @@ function viewArticle()
  */
 function homepage() 
 {
-    $results = array();
-    $data = Article::getList(HOMEPAGE_NUM_ARTICLES);
+    echo CmsConfig::$db_password;
+    $results = array(); // $const->homepage_num_articles
+    $data = Article::getList(CmsConfig::$homepage_num_articles);
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
     
     $data = Category::getList();
     $results['categories'] = array();
-    foreach ( $data['results'] as $category ) { 
-        $results['categories'][$category->id] = $category;
-    } 
-    
-    $results['pageTitle'] = "Простая CMS на PHP";
     
 //    echo "<pre>";
 //    print_r($data);
 //    echo "</pre>";
 //    die();
     
-    require(TEMPLATE_PATH . "/homepage.php");
+    require(CmsConfig::$template_path . "/homepage.php");
     
 }
